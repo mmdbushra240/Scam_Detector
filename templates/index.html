@@ -10,7 +10,7 @@
         body { background-color: #f8fafa; }
         .card { border-radius: 12px; border: none; }
         .drop-zone {
-            border: 2px dashed #fd0de9;
+            border: 2px dashed #0d6efd;
             border-radius: 8px;
             padding: 30px;
             text-align: center;
@@ -28,10 +28,11 @@
 <div class="container py-5">
     <div class="row justify-content-center">
         <div class="col-lg-8">
-            <div class="text-center mb-4">
-                <h1 class="fw-bold text-primary">Job Scam Detector</h1>
-                <p class="text-muted">Analyze offer letters and job postings to guard against fraudulent offers.</p>
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="fw-bold text-primary mb-0">Job Scam Detector</h1>
+                <a href="/logout" class="btn btn-outline-danger btn-sm">Logout</a>
             </div>
+            <p class="text-muted text-center mb-4">Analyze offer letters and job postings to guard against fraudulent offers.</p>
 
             <!-- Tab Navigation -->
             <ul class="nav nav-pills nav-justified mb-3" id="scanTab" role="tablist">
@@ -51,7 +52,7 @@
                 <!-- Shared Input Fields: Email & Money Checkbox -->
                 <div class="row mb-3">
                     <div class="col-md-7">
-                        <label for="senderEmail" class="form-label fw-semibold">Sender Email Address </label>
+                        <label for="senderEmail" class="form-label fw-semibold">Sender Email Address</label>
                         <input type="email" class="form-control" id="senderEmail" placeholder="recruiter@company.com">
                     </div>
                     <div class="col-md-5 d-flex align-items-end">
@@ -146,7 +147,6 @@
         }
     }
 
-    // Helper to render assessment metrics on UI
     function renderResult(data) {
         document.getElementById('errorAlert').classList.add('d-none');
         const resultCard = document.getElementById('resultCard');
@@ -159,7 +159,7 @@
 
         resultCard.classList.remove('d-none');
         const score = data.risk_score;
-        const status = data.status || data.verdict;
+        const status = data.verdict;
 
         scoreText.textContent = `${score}/100`;
         verdictText.textContent = status;
@@ -167,7 +167,6 @@
         progressBar.style.width = `${score}%`;
         progressBar.textContent = `${score}%`;
 
-        // Color coding progress bar
         progressBar.className = 'progress-bar progress-bar-striped progress-bar-animated ';
         if (score >= 60) {
             progressBar.classList.add('bg-danger');
@@ -180,7 +179,6 @@
             verdictText.className = 'text-success fw-bold';
         }
 
-        // Render Flags
         flagsList.innerHTML = '';
         if (data.flags && data.flags.length > 0) {
             data.flags.forEach(flag => {
@@ -196,7 +194,6 @@
             flagsList.appendChild(li);
         }
 
-        // Render extracted text preview if returned by OCR route
         if (data.extracted_text_preview) {
             previewContainer.classList.remove('d-none');
             previewText.textContent = data.extracted_text_preview;
@@ -212,7 +209,6 @@
         errAlert.classList.remove('d-none');
     }
 
-    // Submit Text to /api/analyze Endpoint
     async function analyzeText() {
         const text = document.getElementById('jobText').value;
         const email = document.getElementById('senderEmail').value;
@@ -246,7 +242,6 @@
         }
     }
 
-    // Submit File to /api/analyze-file Endpoint
     async function analyzeFile() {
         if (fileInput.files.length === 0) {
             showError("Please select or drop a PDF or image file first.");
