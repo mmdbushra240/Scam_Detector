@@ -1,5 +1,8 @@
 FROM python:3.10-slim
 
+# Prevent interactive prompts during package installation
+ENV DEBIAN_FRONTEND=noninteractive
+
 # Install system dependencies (Tesseract OCR, libpq for PostgreSQL, gcc/build-essential)
 RUN apt-get update && apt-get install -y --no-install-recommends \
     tesseract-ocr \
