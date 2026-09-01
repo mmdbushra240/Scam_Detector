@@ -1,29 +1,23 @@
 FROM python:3.10-slim
 
-# Prevent interactive prompts during package installation
-ENV DEBIAN_FRONTEND=noninteractive
-
-# Install system dependencies (Tesseract OCR, libpq for PostgreSQL, gcc/build-essential)
+# Install system dependencies (Tesseract OCR for image/PDF analysis)
 RUN apt-get update && apt-get install -y --no-install-recommends \
     tesseract-ocr \
     tesseract-ocr-eng \
-    libpq-dev \
-    gcc \
-    build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-# Set working directory inside container
+# Set working directory inside the container
 WORKDIR /app
 
-# Copy requirements and install Python packages
+# Copy requirements and install dependencies
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy rest of the application code
+# Copy application source code
 COPY . .
 
-# Expose FastAPI port
+# Expose FastAPI application port
 EXPOSE 10000
 
-# Start command for Uvicorn on Render
+# Start Uvicorn server
 CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "10000"]
