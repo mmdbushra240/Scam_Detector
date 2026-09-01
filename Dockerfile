@@ -1,22 +1,26 @@
-FROM python:3.11-slim
+FROM python:3.10-slim
 
-# Install system dependencies and Tesseract OCR
-RUN apt-get update && apt-get install -y \
+# Install system dependencies (Tesseract OCR, libpq for PostgreSQL, gcc/build-essential)
+RUN apt-get update && apt-get install -y --no-install-recommends \
     tesseract-ocr \
-    libtesseract-dev \
+    tesseract-ocr-eng \
+    libpq-dev \
+    gcc \
+    build-essential \
     && rm -rf /var/lib/apt/lists/*
 
+# Set working directory inside container
 WORKDIR /app
 
-# Copy requirement list and install dependencies
+# Copy requirements and install Python packages
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy project files
+# Copy rest of the application code
 COPY . .
 
-# Expose server port
-EXPOSE 8000
+# Expose FastAPI port
+EXPOSE 10000
 
-# Start Uvicorn production web server
-CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
+# Start command for Uvicorn on Render
+CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "10000"]
